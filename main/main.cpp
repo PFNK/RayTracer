@@ -49,6 +49,7 @@ int main(int argc, char* argv[]){
 	//
 	// Main function, render scene
 	//
+	// scene->test();
 	std::printf("Rendering starts...\n");
 	Vec3f* pixelbuffer=RayTracer::render(camera, scene, d["nbounces"].GetInt());
 

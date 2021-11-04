@@ -9,6 +9,8 @@
 
 #include "core/Material.h"
 #include "core/RayHitStructs.h"
+#include <vector>
+
 
 namespace rt
 {
@@ -24,7 +26,7 @@ namespace rt
 		// ka * ia + for each light: kd(L_m * N)*id_m  + ks(R_m * V)^exponent * is_m
 		// ^ ambient + sum(m in light) diffuse_m + specular_m
 		// R is mirror reflection direction
-		BlinnPhong(float ks, float kd, float kr, float specularexponent, Vec3f diffusecolor) : ks(ks), kd(kd), kr(kr), specularexponent(specularexponent), diffusecolor(diffusecolor)
+		BlinnPhong(float ks, float kd, float kr, float specularexponent, Vec3f diffusecolor, std::vector<Vec3f> texture, int tWidth, int tHeight) : ks(ks), kd(kd), kr(kr), specularexponent(specularexponent), diffusecolor(diffusecolor), texture(texture), tWidth(tWidth), tHeight(tHeight) 
 		{
 			// printf("creating blinnphong %f %f %f \n", diffusecolor[0], diffusecolor[1], diffusecolor[2]);
 
@@ -36,14 +38,20 @@ namespace rt
 		//
 		virtual ~BlinnPhong();
 
-		Vec3f getColor(Vec3f diffuse, float specular, Vec3f is, float dist){
-			Vec3f intensity(0,0,0);
+		Vec3f getColor(Vec3f diffuse, float specular, Vec3f is, float dist, Vec2f uv){
+			Vec3f baseColor;
+			if(uv.x != -1 && hasTexture){
+				//GET TEXTUREs
+				int u = uv.x * tWidth;
+				int v = uv.y * tHeight;
+				baseColor = texture[u + (v*tWidth)];
+			}
+			else{
+				baseColor = diffusecolor;
+			}
 
-			Vec3f dif = kd * diffuse * diffusecolor;
+			Vec3f dif = kd * diffuse * baseColor;
 			Vec3f spec = (ks * std::pow(specular,(specularexponent))) * is;
-			// if(kr!=0){
-            //     reflection = kr * castRay(hitPoint + hitNormal * options.bias, R, objects, lights, options, depth + 1); 
-			// }
 			return ((dif/=dist) + (spec/=dist));
 		}
 		
@@ -55,32 +63,15 @@ namespace rt
 			return kr;
 		}
 
-		// float getKs(){
-		// 	return ks;
-		// }
-
-		// float getKd(){
-		// 	return kd;
-		// }
-
-		// float getKr(){
-		// 	return kr;
-		// }
-
-		// float getExponent(){
-		// 	return specularexponent;
-		// }
-
-		// Vec3f getColor(){
-		// 	return diffusecolor;
-		// }
-
 	private:
 		float ks;
 		float kd;
 		float kr;
 		float specularexponent;
 		Vec3f diffusecolor;
+		std::vector<Vec3f> texture;
+		int tWidth;
+		int tHeight;
 	};
 
 } //namespace rt

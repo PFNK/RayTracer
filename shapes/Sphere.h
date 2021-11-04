@@ -36,6 +36,8 @@ public:
 	
 	Hit intersect(Ray* ray);
 
+	Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist);
+
 	// Vec3f getNormal(Vec3f point){
 	// 	return (point - center).normalize();
 	// }

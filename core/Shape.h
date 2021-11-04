@@ -38,9 +38,11 @@ public:
 	// shape creation 
 	static Shape* createShape(Value& shapeSpecs);
 
-	Vec3f getMaterialColor(Vec3f diffuse, float specular, Vec3f is, float dist) const{
-		return material->getColor(diffuse, specular, is, dist);
-	}
+	// Vec3f getMaterialColor(Vec3f diffuse, float specular, Vec3f is, float dist) const{
+	// 	return material->getColor(diffuse, specular, is, dist, );
+	// }
+
+	virtual Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist)=0;
 
 	Vec3f getAmbientColor() const{
 		return material->getAmbientColor();

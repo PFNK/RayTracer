@@ -26,6 +26,7 @@ public:
 	void createScene(Value& scenespecs);
 	Vec3f castRay(Ray* ray);
 	bool checkIntersection(Ray* ray, Vec3f lightPos, Vec3f noise);
+	void test();
 
 	// bool Intersect(const Ray &ray, SurfaceInteraction *isect) const; 
 	// - traces the given ray into the scene and returns a Boolean value indicating whether the ray intersected any of the primitives. 

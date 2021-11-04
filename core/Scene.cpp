@@ -51,9 +51,9 @@ Vec3f Scene::castRay(Ray* ray){
 		for (int i=0; i < shapes.size(); i++){
 			for (int m=0; m < lightSources.size(); m++){
 				Hit h = shapes[i]->intersect(ray);
-				if(h.t < 0){
+				if(h.t > 0){
 					//check if hit is in front of light and not behind
-					Vec3f toPoint = h.point - ray->origin;//ray->origin + (-h.t*ray->direction);//h.point - ray->origin;//- h.origin; h.point = ray->origin + (h.t*ray->direction);
+					Vec3f toPoint = h.point - ray->origin;
 					Vec3f toLight = lightSources[m]->getPosition() - ray->origin;
 					if(toPoint.length()<=toLight.length()) return Vec3f(0.001,0.001,0.001);
 				}
@@ -62,120 +62,113 @@ Vec3f Scene::castRay(Ray* ray){
 		return Vec3f(1,1,1);
 	}
 	
-	if(ray->raytype==PRIMARY){
-	
-		for (int i=0; i < shapes.size(); i++){
-			Hit hit = shapes[i]->intersect(ray);
-			Vec3f intensity(0,0,0);
-			Vec3f L_m, N, V, R, H, diffuse;
-			float dist, specular;
-			
-			if (hit.t != 0){
-				// if it hits the object and if it is closer hit then previous one
-				if (hit.t < t){
-					colorOfHit = shapes[i]->getAmbientColor();
-					// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
+	//if(ray->raytype==PRIMARY){
 
-					N = hit.normal.normalize();
-					V = (ray->origin - (hit.point)).normalize();
+	for (int i=0; i < shapes.size(); i++){
+		Hit hit = shapes[i]->intersect(ray);
+		Vec3f intensity(0,0,0);
+		Vec3f L_m, N, V, R, H, diffuse;
+		float dist, specular;
+		
+		if (hit.t > 0){
+			// if it hits the object and if it is closer hit then previous one
+			if (hit.t < t){
+				colorOfHit = shapes[i]->getAmbientColor();
+				t = hit.t;
+				// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
 
-					for (int m=0; m < lightSources.size(); m++){
-						L_m = (lightSources[m]->getPosition() - (hit.point)).normalize();
-						H = (L_m + V) /= ((L_m + V).length());
-						dist = (lightSources[m]->getPosition() - (hit.point)).length();
+				N = hit.normal.normalize();
+				V = (ray->origin - (hit.point)).normalize();
 
-						diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[m]->getId());
-						specular = std::max(0.f, N.dotProduct(H));
+				for (int m=0; m < lightSources.size(); m++){
+					L_m = (lightSources[m]->getPosition() - (hit.point)).normalize();
+					H = (L_m + V) /= ((L_m + V).length());
+					dist = (lightSources[m]->getPosition() - (hit.point)).length();
 
-						intensity = intensity + shapes[i]->getMaterialColor(diffuse, specular, lightSources[m]->getIs(), dist);
-					}
-					
-					if(ray->raytype==PRIMARY){
-						//CHECK FOR REFLECTIONS
-						// IF MATERIAL IS REFLECTIVE
-						float materialReflectness = shapes[i]->getReflectness();
-						if(materialReflectness>0){
-							// printf("REFLECTNESS %f \n",materialReflectness);
-							R = ray->direction - (2 * ((ray->direction).dotProduct(N)) * N);
-							Vec3f noise = (1e-4 * hit.normal);
-							Ray* rayMirror = new Ray();
-							rayMirror->raytype = SECONDARY;
-							rayMirror->origin = hit.point + noise;
-							rayMirror->direction = -R.normalize();
-							// rayMirror->bounces = 0;
-							Vec3f reflectedColor = materialReflectness * castRay(rayMirror);
-							// printf("REFLECTwed %f %f %f \n",reflectedColor[0],reflectedColor[1],reflectedColor[2]);
+					diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[m]->getId());
+					specular = std::max(0.f, N.dotProduct(H));
 
-							intensity = intensity + reflectedColor;
-						}
-					}
-					
-					// CHECK FOR OBSTRUCTIONS 
-					Ray* rayLight = new Ray();
-					rayLight->raytype = SHADOW;
-					Vec3f noise = (1e-4 * hit.normal);
-					rayLight->origin = hit.point + noise;
-					rayLight->direction = (lightSources[0]->getPosition() - (hit.point + noise)).normalize();
-					Vec3f shadowColor = castRay(rayLight);
-
-					// if(checkIntersection(rayLight, lightSources[0]->getPosition(), noise)){
-					// 	intensity = Vec3f(0.01,0.01,0.01);
-					// }
-
-					colorOfHit = (intensity * shadowColor);//colorOfHit + colorOfHit*(intensity.normalize());
-
-					t = hit.t;
-
-
-					// Vec3f colorGammaCorrected = pow(colorOfHit, Vec3f(1.0 / 2.2));
-
-					// color = material.diffusecolor //ambient
-					// for (int m=0; i < lights.size(); i++)
-					//    diffuse_val = ((light.position - hit.point).dotProduct(shape.n)) * light.id;
-					//    specular_val 
-					//    color += material.getColor(diffuse_val, light.is, hit.point-ray.origin);
-					//    // IN MAT color += material.kd * (hit.p - light.position dot shape.n) * light.id //diffuse
-					//    // IN MAT color += material.ks * (R_m? dot ray.direction)^light.is // specular
+					intensity = intensity + shapes[i]->getMaterialColor(hit.point, diffuse, specular, lightSources[m]->getIs(), dist*dist);
 				}
+
+				// colorOfHit = intensity;
+				
+				if(ray->raytype==PRIMARY){
+					//CHECK FOR REFLECTIONS IF MATERIAL IS REFLECTIVE
+					float materialReflectness = shapes[i]->getReflectness();
+					if(materialReflectness>0){
+						// printf("REFLECTNESS %f \n",materialReflectness);
+						R = ray->direction - (2 * ((ray->direction).dotProduct(N)) * N);
+						Vec3f noise = (1e-4 * hit.normal);
+						Ray* rayMirror = new Ray();
+						rayMirror->raytype = SECONDARY;
+						rayMirror->origin = hit.point + noise;
+						rayMirror->direction = R.normalize();
+						Vec3f reflectedColor = materialReflectness * castRay(rayMirror);
+						// printf("REFLECTwed %f %f %f \n",reflectedColor[0],reflectedColor[1],reflectedColor[2]);
+						intensity = intensity + reflectedColor;
+					}
+				}
+				
+				// CHECK FOR OBSTRUCTIONS 
+				Ray* rayLight = new Ray();
+				rayLight->raytype = SHADOW;
+				Vec3f noise = (1e-4 * hit.normal.normalize());
+				rayLight->origin = hit.point + noise;
+				rayLight->direction = (lightSources[0]->getPosition() - rayLight->origin).normalize();
+				Vec3f shadowColor = castRay(rayLight);
+
+				colorOfHit = (intensity * shadowColor);//colorOfHit + colorOfHit*(intensity.normalize());
 			}
 		}
-		return colorOfHit;
 	}
+	return colorOfHit;
 
-	if(ray->raytype==SECONDARY){
-		float t = INFINITY;
-		Vec3f colorOfHit = backgroundColor;
+	// }
 
-		for (int s=0; s < shapes.size(); s++){
-			Hit hit = shapes[s]->intersect(ray);
-			Vec3f intensity(0,0,0);
-			Vec3f L_m, N, V, R, H, diffuse;
-			float dist, specular;
+	// if(ray->raytype==SECONDARY){
+	// 	float t = INFINITY;
+	// 	Vec3f colorOfHit = backgroundColor;
+
+	// 	for (int s=0; s < shapes.size(); s++){
+	// 		Hit hit = shapes[s]->intersect(ray);
+	// 		Vec3f intensity(0,0,0);
+	// 		Vec3f L_m, N, V, R, H, diffuse;
+	// 		float dist, specular;
 			
-			if (hit.t != 0){
-				if (hit.t < t){
-					// printf("SECONDARY HIT \n");
-					colorOfHit = shapes[s]->getAmbientColor();
-					N = hit.normal.normalize();
-					V = (ray->origin - (hit.point)).normalize();
-					// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
+	// 		if (hit.t > 0){
+	// 			if (hit.t < t){
+	// 				// printf("SECONDARY HIT \n");
+	// 				colorOfHit = shapes[s]->getAmbientColor();
+	// 				N = hit.normal.normalize();
+	// 				V = (ray->origin - (hit.point)).normalize();
+	// 				// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
 
-					for (int l=0; l < lightSources.size(); l++){
-						L_m = (lightSources[l]->getPosition() - (hit.point)).normalize();
-						H = (L_m + V) /= ((L_m + V).length());
-						dist = (lightSources[l]->getPosition() - (hit.point)).length();
+	// 				for (int l=0; l < lightSources.size(); l++){
+	// 					L_m = (lightSources[l]->getPosition() - (hit.point)).normalize();
+	// 					H = (L_m + V) /= ((L_m + V).length());
+	// 					dist = (lightSources[l]->getPosition() - (hit.point)).length();
 
-						diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[l]->getId());
-						specular = std::max(0.f, N.dotProduct(H));
+	// 					diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[l]->getId());
+	// 					specular = std::max(0.f, N.dotProduct(H));
 
-						colorOfHit = colorOfHit + shapes[s]->getMaterialColor(diffuse, specular, lightSources[l]->getIs(), dist);
-					}
-					t = hit.t;
-				}
-			}
-		}
-		return colorOfHit;
-	}
+	// 					intensity = intensity + shapes[s]->getMaterialColor(diffuse, specular, lightSources[l]->getIs(), dist);
+	// 				}
+	// 				// t = hit.t;
+	// 				// Ray* rayLight = new Ray();
+	// 				// rayLight->raytype = SHADOW;
+	// 				// Vec3f noise = (1e-4 * hit.normal.normalize());
+	// 				// rayLight->origin = hit.point + noise;
+	// 				// rayLight->direction = (lightSources[0]->getPosition() - rayLight->origin).normalize();
+	// 				// Vec3f shadowColor = castRay(rayLight);
+
+	// 				// colorOfHit = (intensity * shadowColor);
+	// 				colorOfHit = intensity;
+	// 			}
+	// 		}
+	// 	}
+	// 	return colorOfHit;
+	// }
 
 }
 
@@ -192,6 +185,24 @@ bool Scene::checkIntersection(Ray* ray, Vec3f lightPos, Vec3f noise){
 	return false;
 }
 
+void Scene::test(){
+	Ray* ray = new Ray();
+	ray->raytype = PRIMARY;
+	ray->origin = Vec3f(1.5,2.7,0.15);
+	ray->direction = Vec3f(-1,0,0);
+
+	for (int i=0; i < shapes.size(); i++){
+		printf("Shape %d \n",i);
+
+		Hit h = shapes[i]->intersect(ray);
+		printf("hit %f %f %f \n",h.point[0],h.point[1],h.point[2]);
+		printf("hit.t %f \n", h.t);
+		printf("hit.n %f %f %f\n", h.normal[0], h.normal[1], h.normal[2]);
+
+	}
+
+
+}
 
 } 
 //namespace rt

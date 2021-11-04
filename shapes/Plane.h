@@ -37,6 +37,8 @@ public:
 		return ((v1-v0).crossProduct(v3-v0)).normalize();
 	};
 
+	Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist);
+
 private:
 
     Vec3f v0;
