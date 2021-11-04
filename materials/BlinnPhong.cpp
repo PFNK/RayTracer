@@ -9,6 +9,8 @@
 
 
 namespace rt{
+    BlinnPhong::BlinnPhong():Material(){}
+	BlinnPhong::~BlinnPhong(){}
 
 
 

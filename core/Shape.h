@@ -6,8 +6,12 @@
 #ifndef SHAPE_H_
 #define SHAPE_H_
 
+#include "rapidjson/document.h"
+#include "math/geometry.h"
 #include "core/RayHitStructs.h"
 #include "core/Material.h"
+
+using namespace rapidjson;
 
 namespace rt{
 
@@ -17,7 +21,7 @@ public:
 	//
 	// Constructors
 	//
-	Shape();
+	Shape(){};
 
 	//
 	// Destructor (must be overriden in subclass)
@@ -27,7 +31,25 @@ public:
 	//
 	// Shape abstract methods (to be implemented by subclasses)
 	//
-	virtual Hit intersect(Ray)=0;
+	virtual Hit intersect(Ray*)=0;
+
+	// virtual Vec3f getNormal(Vec3f point)=0;
+
+	// shape creation 
+	static Shape* createShape(Value& shapeSpecs);
+
+	Vec3f getMaterialColor(Vec3f diffuse, float specular, Vec3f is, float dist) const{
+		return material->getColor(diffuse, specular, is, dist);
+	}
+
+	Vec3f getAmbientColor() const{
+		return material->getAmbientColor();
+	}
+
+	float getReflectness() const{
+		return material->getReflectness();
+	}
+
 
 
 protected:

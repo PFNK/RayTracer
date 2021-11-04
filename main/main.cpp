@@ -35,39 +35,39 @@ int main(int argc, char* argv[]){
 	d.ParseStream(is);
 
 	//generate a camera according to the input file
+	std::printf("Generating camera...\n");
 	Camera* camera=Camera::createCamera(d["camera"]);
 
 	//print camera data (based on the input file provided)
 	camera->printCamera();
 
-	//generate the scene according to the input file
+	// //generate the scene according to the input file
+	std::printf("Generating scene...\n");
 	Scene* scene=new Scene();
 	scene->createScene(d["scene"]);
 
 	//
 	// Main function, render scene
 	//
+	std::printf("Rendering starts...\n");
 	Vec3f* pixelbuffer=RayTracer::render(camera, scene, d["nbounces"].GetInt());
 
-
-
-	//free resources when rendering is finished
-	delete camera;
-	delete scene;
-
-
-
 	//convert linear RGB pixel values [0-1] to range 0-255
-	RayTracer::tonemap(pixelbuffer);
-
-
+	std::printf("Tone-mapping scene...\n");
+	pixelbuffer = RayTracer::tonemap(pixelbuffer, camera);
 
 	std::printf("Output file: %s\n",outputFile);
 
 	//write rendered scene to file (pixels RGB values must be in range 0255)
+	std::printf("Writing rendered scene to file...\n");
 	PPMWriter::PPMWriter(camera->getWidth(), camera->getHeight(), pixelbuffer, outputFile);
-
+	
+	std::printf("Deleting resources...\n");
+	//free resources when rendering is finished
+	delete camera;
+	delete scene;
 	delete pixelbuffer;
+	
 }
 
 

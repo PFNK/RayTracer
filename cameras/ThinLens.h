@@ -7,6 +7,7 @@
 #define THINLENS_H_
 
 #include "core/Camera.h"
+// #include "core/RayHitStructs.h"
 
 
 namespace rt{
@@ -29,6 +30,8 @@ public:
 	// print function (implementing abstract function of base class)
 	//
 	void printCamera();
+
+	Ray* getPrimaryRay(int pixel_x, int pixel_y);
 
 };
 

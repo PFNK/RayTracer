@@ -7,7 +7,8 @@
 #define CAMERA_H_
 
 #include "rapidjson/document.h"
-
+#include "math/geometry.h"
+#include "core/RayHitStructs.h"
 
 using namespace rapidjson;
 
@@ -20,7 +21,7 @@ public:
 	// Constructors
 	//
 	Camera(){};
-	Camera(int height, int width, int fov):height(height), width(width), fov(fov){};
+	Camera(int height, int width, int fov, Vec3f position, Vec3f lookat, Vec3f up):height(height), width(width), fov(fov), position(position), lookat(lookat), up(up){};
 
 	//
 	// Destructor
@@ -45,7 +46,7 @@ public:
 	// other camera functions (to complete)
 	//
 
-
+	virtual Ray* getPrimaryRay(int pixel_x, int pixel_y)=0;
 
 
 
@@ -87,6 +88,9 @@ protected:
 	int height;
 	int width;
 	int fov; //field of view
+	Vec3f position;
+	Vec3f lookat;
+	Vec3f up;
 
 };
 
