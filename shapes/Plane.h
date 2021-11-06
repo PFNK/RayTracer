@@ -33,9 +33,6 @@ public:
 	// Functions that need to be implemented, since Plane is a subclass of Shape
 	//
 	Hit intersect(Ray* ray);
-	Vec3f getNormal(Vec3f point){
-		return ((v1-v0).crossProduct(v3-v0)).normalize();
-	};
 
 	Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist);
 

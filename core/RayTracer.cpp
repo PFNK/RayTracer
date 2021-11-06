@@ -29,6 +29,7 @@ Vec3f* RayTracer::render(Camera* camera, Scene* scene, int nbounces){
 			// printf("%f %f %f \n", ray->direction[0], ray->direction[1], ray->direction[2]);
 			Vec3f color = scene->castRay(ray);
 			pixelbuffer[index] = color;
+			// printf("DONE: %f \n", (float)index/(camera->getWidth()*camera->getHeight()));
             // *(pix++) = castRay(orig, dir, objects, lights, options, 0);
 			index++; 
 		} 

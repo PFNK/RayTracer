@@ -51,6 +51,10 @@ Vec3f Scene::castRay(Ray* ray){
 		for (int i=0; i < shapes.size(); i++){
 			for (int m=0; m < lightSources.size(); m++){
 				Hit h = shapes[i]->intersect(ray);
+				// Hit h;
+				// h.t = 4.289965;
+				// h.point = Vec3f(-0.006005, 3.709938, 1.984057);
+				// h.normal = Vec3f(-0.577350, 0.577350, 0.577350);
 				if(h.t > 0){
 					//check if hit is in front of light and not behind
 					Vec3f toPoint = h.point - ray->origin;
@@ -66,6 +70,10 @@ Vec3f Scene::castRay(Ray* ray){
 
 	for (int i=0; i < shapes.size(); i++){
 		Hit hit = shapes[i]->intersect(ray);
+		// Hit hit;
+		// hit.t = 6.898032;
+		// hit.point = Vec3f(-0.281825, 1.127214, 0.445962);
+		// hit.normal = Vec3f(-0.577350, 0.577350, 0.577350);
 		Vec3f intensity(0,0,0);
 		Vec3f L_m, N, V, R, H, diffuse;
 		float dist, specular;
@@ -73,12 +81,19 @@ Vec3f Scene::castRay(Ray* ray){
 		if (hit.t > 0){
 			// if it hits the object and if it is closer hit then previous one
 			if (hit.t < t){
+				
+				// printf("IN h t %f", hit.t);
+				// printf(" point %f %f %f ", hit.point.x, hit.point.y, hit.point.z);
+				// printf(" normal %f %f %f \n", hit.normal.x, hit.normal.y, hit.normal.z);
 				colorOfHit = shapes[i]->getAmbientColor();
+
 				t = hit.t;
 				// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
 
 				N = hit.normal.normalize();
+
 				V = (ray->origin - (hit.point)).normalize();
+
 
 				for (int m=0; m < lightSources.size(); m++){
 					L_m = (lightSources[m]->getPosition() - (hit.point)).normalize();
@@ -88,7 +103,7 @@ Vec3f Scene::castRay(Ray* ray){
 					diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[m]->getId());
 					specular = std::max(0.f, N.dotProduct(H));
 
-					intensity = intensity + shapes[i]->getMaterialColor(hit.point, diffuse, specular, lightSources[m]->getIs(), dist*dist);
+					intensity = intensity + shapes[i]->getMaterialColor(hit.point, diffuse, specular, lightSources[m]->getIs(), dist);
 				}
 
 				// colorOfHit = intensity;

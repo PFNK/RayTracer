@@ -16,23 +16,19 @@ class Triangle: public Shape{
 public:
 
     Triangle();
-    Triangle(Vec3f v0, Vec3f v1, Vec3f v2):v0(v0),v1(v1),v2(v2){};
+    Triangle(Vec3f* v0, Vec3f* v1, Vec3f* v2):v0(v0),v1(v1),v2(v2){};
 
     virtual ~Triangle();
 
     Hit intersect(Ray* ray);
 
-    Vec3f getNormal(Vec3f point){
-        return ((v1 - v0).crossProduct(v2 - v0)).normalize();
-    }
-
     Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist);
 
-private:
+public:
 
-    Vec3f v0;
-    Vec3f v1;
-    Vec3f v2;
+    Vec3f* v0;
+    Vec3f* v1;
+    Vec3f* v2;
 
 };
 
