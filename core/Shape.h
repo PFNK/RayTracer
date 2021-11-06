@@ -10,6 +10,7 @@
 #include "math/geometry.h"
 #include "core/RayHitStructs.h"
 #include "core/Material.h"
+#include "shapes/Bounds.h"
 
 using namespace rapidjson;
 
@@ -33,10 +34,12 @@ public:
 	//
 	virtual Hit intersect(Ray*)=0;
 
-	// virtual Vec3f getNormal(Vec3f point)=0;
+	virtual Bounds getBounds()=0;
 
 	// shape creation 
 	static Shape* createShape(Value& shapeSpecs);
+
+	static Shape* createBVH(std::vector<Shape*> shapes);
 
 	// Vec3f getMaterialColor(Vec3f diffuse, float specular, Vec3f is, float dist) const{
 	// 	return material->getColor(diffuse, specular, is, dist, );

@@ -35,6 +35,7 @@ namespace rt{
 	 */
 	Hit Sphere::intersect(Ray* ray){
 		Hit h;
+		h.dest = this;
 		float t;
 		//-----------to be implemented -------------
 		Vec3f oc = ray->origin - center; //center - ray->origin;//

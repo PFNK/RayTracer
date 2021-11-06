@@ -1,0 +1,121 @@
+{
+"nbounces":3,
+"camera":{
+    "type":"pinhole",
+    "width":800,
+    "height":800,
+    "fov":35,
+    "position": [0.0, -4.5, 3.5],
+    "lookat": [0.0, 1.0, -0.1],
+    "up": [0.0, 0.0, 0.5]
+},
+"scene":{
+    "backgroundcolor":[0.01, 0.01, 0.01],
+    "lightsources": [
+    {
+        "type": "pointlight",
+        "position": [0.0, 1.0, 1.5],
+        "is": [100.0, 100.0, 100.0],
+        "id": [100.0, 100.0, 100.0]
+    }
+    ],
+    "shapes":[
+    {
+        "type":"sphere",
+        "center": [1, 4, 0],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.6, 0.3, 0.4]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [1, 4, 1.5],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.3, 0.8, 0.4]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [1, 4, 3],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.4, 0.9, 0.9]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [1, 4, 4.5],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.2, 0.3, 0.9]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [-1, 4, 0],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.9, 0.8, 0.2]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [-1, 4, 1.5],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.1, 0.9, 0.2]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [-1, 4, 3],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.9, 0.2, 0.8]
+        }
+    },
+    {
+        "type":"sphere",
+        "center": [-1, 4, 4.5],
+        "radius":0.5,
+        "material":{
+            "ks":0.4,
+            "kd":0.8,
+            "kr":0.5,
+            "specularexponent":3,
+            "diffusecolor":[0.4, 0.3, 0.2]
+        }
+    }
+    ]
+}
+}

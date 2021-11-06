@@ -39,12 +39,12 @@ namespace rt{
 
     Hit Triangle::intersect(Ray* ray){
         Hit h;
-
+        h.dest = this;
         Vec3f normal = ((*v1 - *v0).crossProduct(*v2 - *v0)).normalize();
 
         float denom = normal.dotProduct(ray->direction);
         if (abs(denom)<0.0001f){
-            h.normal = (0,0,0);
+            h.normal = Vec3f(0,0,0);
             h.t = 0;
             h.point = Vec3f(-1,-1,-1);
             return h;

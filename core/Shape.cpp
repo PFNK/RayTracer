@@ -7,7 +7,7 @@
 #include "shapes/Plane.h"
 #include "shapes/Triangle.h"
 #include "shapes/TriMesh.h"
-
+#include "shapes/BVH.h"
 
 namespace rt{
 
@@ -83,6 +83,10 @@ namespace rt{
 
         return 0;
 
+    }
+
+    Shape* Shape::createBVH(std::vector<Shape*> shapes){
+        return new BVH(shapes);
     }
 
 

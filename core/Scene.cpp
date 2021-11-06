@@ -7,7 +7,7 @@
 #include "Scene.h"
 #include "shapes/Sphere.h"
 #include <cmath>
-
+#include "shapes/BVH.h"
 
 namespace rt{
 
@@ -22,6 +22,7 @@ void Scene::createScene(Value& scenespecs){
 	Value& jsonShapes = scenespecs["shapes"];
 	Value& jsonLights = scenespecs["lightsources"];
 	backgroundColor = Vec3f(scenespecs["backgroundcolor"][0].GetFloat(), scenespecs["backgroundcolor"][1].GetFloat(), scenespecs["backgroundcolor"][2].GetFloat());
+	std::vector<Shape*> shapesForBVH;
 
 	//iterate through shapes
 	std::cout<<"'shapes' contains "<<jsonShapes.Size()<<" elements:"<<std::endl;
@@ -31,8 +32,13 @@ void Scene::createScene(Value& scenespecs){
 			Shape* p = Shape::createShape(jsonShapes[i]);
 			// printf("%p \n", &(p->center));
 			// shapes.push_back(Shape::createShape(jsonShapes[i]));
-			shapes.push_back(p);
+			shapesForBVH.push_back(p);
 	}
+
+	// std::vector<Shape*> stuff;
+	Shape* bvh = Shape::createBVH(shapesForBVH);
+	sceneShapes.push_back(bvh);
+	// sceneShapes = shapesForBVH;
 
 	//iterate through lightsources
 	std::cout<<"'lightsources' contains "<<jsonLights.Size()<<" elements:"<<std::endl;
@@ -47,14 +53,11 @@ Vec3f Scene::castRay(Ray* ray){
 	Vec3f colorOfHit = backgroundColor;
 
 	if(ray->raytype==SHADOW){
+		printf("casting shadow \n");
 		Vec3f shadowColor(1,1,1);
-		for (int i=0; i < shapes.size(); i++){
+		for (int i=0; i < sceneShapes.size(); i++){
 			for (int m=0; m < lightSources.size(); m++){
-				Hit h = shapes[i]->intersect(ray);
-				// Hit h;
-				// h.t = 4.289965;
-				// h.point = Vec3f(-0.006005, 3.709938, 1.984057);
-				// h.normal = Vec3f(-0.577350, 0.577350, 0.577350);
+				Hit h = sceneShapes[i]->intersect(ray);
 				if(h.t > 0){
 					//check if hit is in front of light and not behind
 					Vec3f toPoint = h.point - ray->origin;
@@ -67,13 +70,12 @@ Vec3f Scene::castRay(Ray* ray){
 	}
 	
 	//if(ray->raytype==PRIMARY){
+	printf("casting non shadow ray \n");
 
-	for (int i=0; i < shapes.size(); i++){
-		Hit hit = shapes[i]->intersect(ray);
-		// Hit hit;
-		// hit.t = 6.898032;
-		// hit.point = Vec3f(-0.281825, 1.127214, 0.445962);
-		// hit.normal = Vec3f(-0.577350, 0.577350, 0.577350);
+	for (int i=0; i < sceneShapes.size(); i++){
+		printf("calling intersect \n");
+		Hit hit = sceneShapes[i]->intersect(ray);
+		printf("got hit \n");
 		Vec3f intensity(0,0,0);
 		Vec3f L_m, N, V, R, H, diffuse;
 		float dist, specular;
@@ -85,7 +87,7 @@ Vec3f Scene::castRay(Ray* ray){
 				// printf("IN h t %f", hit.t);
 				// printf(" point %f %f %f ", hit.point.x, hit.point.y, hit.point.z);
 				// printf(" normal %f %f %f \n", hit.normal.x, hit.normal.y, hit.normal.z);
-				colorOfHit = shapes[i]->getAmbientColor();
+				colorOfHit = hit.dest->getAmbientColor();
 
 				t = hit.t;
 				// printf("color %f %f %f \n",colorOfHit[0],colorOfHit[1],colorOfHit[2]);
@@ -103,14 +105,14 @@ Vec3f Scene::castRay(Ray* ray){
 					diffuse = (std::max(0.f,(N.dotProduct(L_m)))) * (lightSources[m]->getId());
 					specular = std::max(0.f, N.dotProduct(H));
 
-					intensity = intensity + shapes[i]->getMaterialColor(hit.point, diffuse, specular, lightSources[m]->getIs(), dist);
+					intensity = intensity + hit.dest->getMaterialColor(hit.point, diffuse, specular, lightSources[m]->getIs(), dist);
 				}
 
 				// colorOfHit = intensity;
 				
 				if(ray->raytype==PRIMARY){
 					//CHECK FOR REFLECTIONS IF MATERIAL IS REFLECTIVE
-					float materialReflectness = shapes[i]->getReflectness();
+					float materialReflectness = hit.dest->getReflectness();
 					if(materialReflectness>0){
 						// printf("REFLECTNESS %f \n",materialReflectness);
 						R = ray->direction - (2 * ((ray->direction).dotProduct(N)) * N);
@@ -187,37 +189,35 @@ Vec3f Scene::castRay(Ray* ray){
 
 }
 
-bool Scene::checkIntersection(Ray* ray, Vec3f lightPos, Vec3f noise){
-	for (int i=0; i < shapes.size(); i++){
-		Hit h = shapes[i]->intersect(ray);
-		if(h.t < 0){
-			//check if hit is in front of light and not behind
-			Vec3f toPoint = h.point - ray->origin;//ray->origin + (-h.t*ray->direction);//h.point - ray->origin;//- h.origin; h.point = ray->origin + (h.t*ray->direction);
-			Vec3f toLight = lightPos - ray->origin;
-			if(toPoint.length()<=toLight.length()) return true;
-		}
-	}
-	return false;
-}
+// bool Scene::checkIntersection(Ray* ray, Vec3f lightPos, Vec3f noise){
+// 	for (int i=0; i < shapes.size(); i++){
+// 		Hit h = shapes[i]->intersect(ray);
+// 		if(h.t < 0){
+// 			//check if hit is in front of light and not behind
+// 			Vec3f toPoint = h.point - ray->origin;//ray->origin + (-h.t*ray->direction);//h.point - ray->origin;//- h.origin; h.point = ray->origin + (h.t*ray->direction);
+// 			Vec3f toLight = lightPos - ray->origin;
+// 			if(toPoint.length()<=toLight.length()) return true;
+// 		}
+// 	}
+// 	return false;
+// }
 
-void Scene::test(){
-	Ray* ray = new Ray();
-	ray->raytype = PRIMARY;
-	ray->origin = Vec3f(1.5,2.7,0.15);
-	ray->direction = Vec3f(-1,0,0);
+// void Scene::test(){
+// 	Ray* ray = new Ray();
+// 	ray->raytype = PRIMARY;
+// 	ray->origin = Vec3f(1.5,2.7,0.15);
+// 	ray->direction = Vec3f(-1,0,0);
 
-	for (int i=0; i < shapes.size(); i++){
-		printf("Shape %d \n",i);
+// 	for (int i=0; i < shapes.size(); i++){
+// 		printf("Shape %d \n",i);
 
-		Hit h = shapes[i]->intersect(ray);
-		printf("hit %f %f %f \n",h.point[0],h.point[1],h.point[2]);
-		printf("hit.t %f \n", h.t);
-		printf("hit.n %f %f %f\n", h.normal[0], h.normal[1], h.normal[2]);
+// 		Hit h = shapes[i]->intersect(ray);
+// 		printf("hit %f %f %f \n",h.point[0],h.point[1],h.point[2]);
+// 		printf("hit.t %f \n", h.t);
+// 		printf("hit.n %f %f %f\n", h.normal[0], h.normal[1], h.normal[2]);
 
-	}
-
-
-}
+// 	}
+// }
 
 } 
 //namespace rt

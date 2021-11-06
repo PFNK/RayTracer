@@ -35,6 +35,7 @@ namespace rt{
 	Hit Plane::intersect(Ray* ray){
 		Hit h;
 		float t;
+        h.dest = this;
 		//-----------to be implemented -------------
         // want find t where (ray_o + ray_dir * t - v0) * n = 0
         // meaning there is a point along the ray (p=ray_o + ray_dir*t) that lies on the plane (p-v0 dot n = 0) => (p-v0) is perpendicular to normal of plane

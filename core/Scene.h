@@ -38,7 +38,7 @@ public:
     // bool IntersectTr(Ray ray, Sampler &sampler, SurfaceInteraction *isect, Spectrum *transmittance) const;
 
 	std::vector<LightSource*> lightSources;
-	std::vector<Shape*> shapes;
+	std::vector<Shape*> sceneShapes;
 	Vec3f backgroundColor;
 
 };

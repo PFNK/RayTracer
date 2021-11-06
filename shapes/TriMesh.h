@@ -9,6 +9,7 @@
 
 #include "core/Shape.h"
 #include "shapes/Triangle.h"
+#include "shapes/Bounds.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -69,9 +70,7 @@ public:
             i++;
         }
 
-
         i=0;
-
         while(i<nFaces){
             getline (stream, value);
             istringstream iss(value);
@@ -84,9 +83,6 @@ public:
             i++;
         }
         stream.close(); 
-        printf("mesh done \n");
-
-
     };
 
     virtual ~TriMesh();
@@ -94,6 +90,14 @@ public:
     Hit intersect(Ray* ray);
 
     Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist);
+
+    Bounds getBounds(){
+        Bounds b(Vec3f(INFINITY,INFINITY,INFINITY), Vec3f(-INFINITY,-INFINITY,-INFINITY));
+        for(int i=0;i<vertices.size();i++){
+            b.comparePoint(vertices[i]);
+        }
+        return b;
+    }
 
 private:
 

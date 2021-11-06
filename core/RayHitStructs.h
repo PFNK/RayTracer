@@ -23,7 +23,7 @@ struct Ray{
 	Vec3f direction;
 };
 
-
+class Shape;
 struct Hit{
 
 	Vec3f point; //point where ray hits a shape
@@ -31,6 +31,7 @@ struct Hit{
 	float t;
 	Vec3f normal;
 	int bounces;
+	Shape* dest;
 
 };
 
