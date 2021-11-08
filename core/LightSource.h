@@ -23,7 +23,6 @@ public:
 	// Constructors
 	//
 	LightSource(){};
-	// LightSource(Vec3f position):position(position){};
 
 	//
 	// Destructor
@@ -54,13 +53,6 @@ public:
 	virtual Vec3f getPosition()=0;
 	virtual Vec3f getId()=0;
 	virtual Vec3f getIs()=0;
-
-
-// private:
-
-
-// protected:
-// 	Vec3f position;
 
 };
 

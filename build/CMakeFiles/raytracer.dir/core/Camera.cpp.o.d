@@ -251,5 +251,11 @@ CMakeFiles/raytracer.dir/core/Camera.cpp.o: \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/error/../rapidjson.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/internal/strfunc.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/internal/../stream.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/math/geometry.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/iomanip \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/cmath \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/math.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/math.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/cameras/Pinhole.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/cameras/ThinLens.h

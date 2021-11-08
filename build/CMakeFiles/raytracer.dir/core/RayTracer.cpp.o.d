@@ -257,10 +257,11 @@ CMakeFiles/raytracer.dir/core/RayTracer.cpp.o: \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/error/../rapidjson.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/internal/strfunc.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/rapidjson/internal/../stream.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Scene.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/__split_buffer \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/LightSource.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Shape.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Bounds.h

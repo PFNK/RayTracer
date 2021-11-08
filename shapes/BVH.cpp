@@ -11,28 +11,25 @@ namespace rt{
     BVH::BVH():Shape(){}
 
     BVH::BVH(std::vector<Shape*> shapes){
+        root = new Node();
         if(shapes.size() > 0){
-            root = new Node();
-            root=buildTree(shapes);
+            printf("Splitting %d shapes in the BVH... \n", shapes.size());
+            root=buildTree(shapes, 0);
         }
         else{
             printf("Must have shapes \n");
-            root = new Node();
             root->left = nullptr;
             root->right = nullptr;
-            root->shape = nullptr;
+            std::vector<Shape*> emptyVector;
+            root->shapesStored = emptyVector;
         }
     };
 
     BVH::~BVH(){}
 
     Hit BVH::intersect(Ray* ray){
-        printf("in BVH intersect \n");
-        // root->shape = nullptr;
-        // printf(root->right == ? "true\n" : "false\n");
-        if(root->isInner) printf("root is inner? \n");
         if(!root->left && !root->right){
-            printf("empty BVH intersect \n");
+            printf("empty root, error maybe? \n");
             Hit h;
             h.t = 0;
             h.point = Vec3f(-1,-1,-1);
@@ -40,117 +37,169 @@ namespace rt{
             h.dest = nullptr;
             return h;
         }
-        return intersectTree(root, ray);
+
+        Hit h = intersectTree(root, ray);
+        return h;
     }
 
     Hit BVH::intersectTree(Node* node, Ray* ray){
-        
+        if(node->isEmpty){
+            Hit miss;
+            miss.point = Vec3f(-1,-1,-1);
+            miss.t = 0;
+            miss.normal = Vec3f(0,0,0);
+            return miss;
+        }
+
         if(!node->isInner){
-            printf("is a leaf \n");
-            return node->shape->intersect(ray);
+            Vec3f bestNormal = Vec3f(0,0,0);
+            Vec3f bestPoint = Vec3f(0,0,0);
+            bool hitBool = false;
+            bool hasMissed = true;
+            float closestT = INFINITY;
+            Shape * shapePointer;
+
+            for(int i=0;i<node->shapesStored.size();i++){
+                Hit h = node->shapesStored[i]->intersect(ray);
+                if(h.t>0 && h.t<closestT){
+                    bestNormal = h.normal;
+                    bestPoint = h.point;
+                    hasMissed = false;
+                    closestT = h.t;
+                    shapePointer = h.dest;
+                }
+            }
+            if(hasMissed){
+                Hit miss;
+                miss.t = 0;
+                miss.point = Vec3f(-1,-1,-1);
+                miss.dest = nullptr;
+                return miss;
+            }
+
+            Hit closestHit;
+            closestHit.dest = shapePointer;
+            closestHit.point = bestPoint;
+            closestHit.normal = bestNormal;
+            closestHit.t = closestT;
+            return closestHit;
         } 
+
         else{
-            printf("not a leaf \n");
             Hit hLeft, hRight;
             hLeft.t = hRight.t = INFINITY;
+            bool hasMissed = true;
             hLeft.point = hRight.point = Vec3f(-1,-1,-1);
             hLeft.normal = hRight.normal = Vec3f(0,0,0);
-            if(node->left->bounds.intersect(ray)){
-                printf("here \n");
-                hLeft = intersectTree(node->left, ray);
-            } 
-            if(node->right->bounds.intersect(ray)){
-                printf("here \n");
-                hRight = intersectTree(node->right, ray);
+
+            if(node->left){
+                if(node->left->bounds.intersect(ray)){
+                    hasMissed = false;
+                    hLeft = intersectTree(node->left, ray);
+                }
             }
-            printf("here \n");
-            if(hLeft.t < hRight.t) return hLeft;
-            else return hRight; 
+            
+            if(node->right){
+                if(node->right->bounds.intersect(ray)){
+                    hasMissed = false;
+                    hRight = intersectTree(node->right, ray);
+                }
+            }
+
+            Hit miss;
+            miss.point = Vec3f(-1,-1,-1);
+            miss.t = 0;
+            miss.normal = Vec3f(0,0,0);
+
+            if(hasMissed) return miss;
+
+            if(hLeft.t <= 0){
+                if(hRight.t > 0 && hRight.t != INFINITY) return hRight;
+                return miss;
+            }
+            
+            if(hRight.t <= 0){
+                if(hLeft.t > 0 && hLeft.t != INFINITY) return hLeft;
+                return miss;
+            }
+
+            if(hRight.t<=hLeft.t) return hRight;
+            if(hLeft.t<=hRight.t) return hLeft;
+
+            return miss;
         }
     }
 
-    BVH::Node* BVH::buildTree(std::vector<Shape*> shapes){
-        printf("bvh build tree\n");
+    BVH::Node* BVH::buildTree(std::vector<Shape*> shapes, int attempts){
+        if(shapes.size()==0){
+            Node* emptyNode = new Node();
+            Bounds emptyBounds;
+            std::vector<Shape*> emptyShapes;
+            emptyNode->bounds = emptyBounds;
+            emptyNode->left = nullptr;
+            emptyNode->right = nullptr;
+            emptyNode->isInner = false;
+            emptyNode->shapesStored = emptyShapes;
+            emptyNode->isEmpty = true;
+            return emptyNode;
+        }
 
-        // if(shapes.size()==0){
-        //     printf("empty leaf\n");
-        //     Node* leaf = new Node();
-        //     leaf->shape = nullptr;
-        //     leaf->left = nullptr;
-        //     leaf->right = nullptr;
-        //     leaf->isInner = false;
-        //     return leaf;
-        // }
-
-        if(shapes.size()==1){
-            printf("creating leaf \n");
+        if(shapes.size()==1 || attempts>=MAX_SPLIT_ATTEMPTS){
             Node* leaf = new Node();
-            leaf->shape = shapes[0];
-            leaf->bounds = shapes[0]->getBounds();
+            Bounds totalBound = shapes[0]->getBounds();
+            
+            for(int i=0;i<shapes.size();i++){
+                totalBound = Bounds::boundsUnion(totalBound, shapes[i]->getBounds());
+                leaf->shapesStored.push_back(shapes[i]);
+            }
+            leaf->bounds = totalBound;
             leaf->left = nullptr;
             leaf->right = nullptr;
             leaf->isInner = false;
+            leaf->isEmpty = false;
             return leaf;
         }
 
         else{
-            printf("not leaf\n");
+            attempts++;
             Node* innerNode = new Node();
             std::vector<Shape*> leftChildren;
             std::vector<Shape*> rightChildren;
             Bounds totalBound = shapes[0]->getBounds();
             innerNode->isInner = true;
-            innerNode->bounds = totalBound;
-            innerNode->shape = nullptr;
+            std::vector<Shape*> emptyShapes;
+            innerNode->shapesStored = emptyShapes;
+            innerNode->isEmpty = false;
             
             for(int i=1;i<shapes.size();i++){
                 totalBound = Bounds::boundsUnion(totalBound, shapes[i]->getBounds());
             }
+
+            innerNode->bounds = totalBound;
             int splitAxIndex = totalBound.getBoundsSplitIndex();
-            Vec3f midPoint = totalBound.min + ((totalBound.max - totalBound.min) * 0.5).length();
+            Vec3f midPoint = ((totalBound.max - totalBound.min) * 0.5);
+            
             for(int i=0;i<shapes.size();i++){
                 Bounds shapeBound = shapes[i]->getBounds();
-                Vec3f shapeCentroid = shapeBound.min + ((shapeBound.max - shapeBound.min) * 0.5).length();
+                Vec3f shapeCentroid = ((shapeBound.max - shapeBound.min) * 0.5);
                 if(shapeCentroid[splitAxIndex] < midPoint[splitAxIndex]) leftChildren.push_back(shapes[i]);
                 else rightChildren.push_back(shapes[i]);
             }
-            printf("left children size %d \n", leftChildren.size());
-            printf("right children size %d \n", rightChildren.size());
+            // printf("left children size %d \n", leftChildren.size());
+            // printf("right children size %d \n", rightChildren.size());
 
-            // if(leftChildren.size() == 1){
-            //     printf("returing leaf \n");
-            //     Node* leaf = new Node();
-            //     leaf->shape = leftChildren[0];
-            //     leaf->bounds = leftChildren[0]->getBounds();
-            //     leaf->left = nullptr;
-            //     leaf->right = nullptr;
-            //     innerNode->left = leaf;
-            // }
-            // else{
-                innerNode->left = buildTree(leftChildren);
-            // }
+            innerNode->left = buildTree(leftChildren, attempts);
+            innerNode->right = buildTree(rightChildren, attempts);
 
-            // if(rightChildren.size() == 1){
-            //     printf("returing leaf \n");
-            //     Node* leafRight = new Node();
-            //     leafRight->shape = rightChildren[0];
-            //     leafRight->bounds = rightChildren[0]->getBounds();
-            //     leafRight->left = nullptr;
-            //     leafRight->right = nullptr;
-            //     innerNode->right = leafRight;
-            // }
-            // else{
-                innerNode->right = buildTree(rightChildren);
-            // }
+            return innerNode;
 
         }
     }
 
 
-    Vec3f BVH::getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist){};
-
-
-    
+    Vec3f BVH::getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist){
+        printf("this should never be called! \n");
+    };
 
 
 

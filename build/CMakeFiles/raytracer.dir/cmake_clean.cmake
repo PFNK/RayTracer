@@ -25,6 +25,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/raytracer.dir/materials/BlinnPhong.cpp.o.d"
   "CMakeFiles/raytracer.dir/shapes/BVH.cpp.o"
   "CMakeFiles/raytracer.dir/shapes/BVH.cpp.o.d"
+  "CMakeFiles/raytracer.dir/shapes/Plane.cpp.o"
+  "CMakeFiles/raytracer.dir/shapes/Plane.cpp.o.d"
   "CMakeFiles/raytracer.dir/shapes/Sphere.cpp.o"
   "CMakeFiles/raytracer.dir/shapes/Sphere.cpp.o.d"
   "CMakeFiles/raytracer.dir/shapes/TriMesh.cpp.o"

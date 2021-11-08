@@ -8,6 +8,7 @@
 #define AREALIGHT_H_
 
 #include "core/LightSource.h"
+#include <time.h>
 
 namespace rt{
 
@@ -18,42 +19,27 @@ public:
 	// Constructors
 	//
 	AreaLight();
-	AreaLight(Vec3f position, Vec3f id, Vec3f is):position(position), id(id), is(is){}
+	AreaLight(Vec3f v0, Vec3f v1, Vec3f v2, Vec3f id, Vec3f is):v0(v0), v1(v1), v2(v2), id(id), is(is){
+		srand(time(NULL)); //because getPosition uses rand()
+	}
 
 	//
 	//Destructor
 	//
 	virtual ~AreaLight();
-	//
-	// print function (implementing abstract function of base class)
-	//
+
 	void printLightSource();
 	Vec3f getId();
 	Vec3f getIs();
 	Vec3f getPosition();
 
 
-	// Vec3f AreaLight::getPosition() const {
-	// 	return position;
-	// }
-
-	// Vec3f getId() const {
-	// 	return id;
-	// }
-
-	// Vec3f getIs() const {
-	// 	return is;
-	// }
-
-	// void setPosition(Vec3f pos) {
-	// 	this->position = pos;
-	// }
-
 protected:
-	Vec3f position;
     Vec3f id;
     Vec3f is;
-
+	Vec3f v0;
+	Vec3f v1;
+	Vec3f v2;
 };
 
 

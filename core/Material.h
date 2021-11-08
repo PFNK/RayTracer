@@ -20,7 +20,6 @@ public:
 	// Constructors
 	//
 	Material(){};
-    // Material(Vec3f diffusecolor):diffusecolor(diffusecolor){};
 
 	//
 	// Destructor 
@@ -34,11 +33,6 @@ public:
 	virtual float getReflectness()=0;
 
 	static std::vector<Vec3f> readTexture(std::string path, int height, int width);
-
-	
-	// Vec3f getAmbientColor(){
-	// 	return diffusecolor;
-	// }
 
 
 public:

@@ -30,7 +30,7 @@
             "specularexponent":3,
             "diffusecolor":[0.4, 0.3, 0.4],
             "tPath": "../textures/sky-map.jpg",
-            "tWidth": 850,
+            "tWidth": 852,
             "tHeight": 480
         }
     },
@@ -77,7 +77,10 @@
             "ks": 0.6,
             "kd": 1.0,
             "specularexponent": 10,
-            "diffusecolor": [1.0, 0.2, 0.2]
+            "diffusecolor": [1.0, 0.2, 0.2],
+            "tPath": "../textures/sicily.jpg",
+            "tWidth": 600,
+            "tHeight": 490
         }
     },
     {
@@ -90,7 +93,10 @@
             "ks": 0.6,
             "kd": 1.0,
             "specularexponent": 10,
-            "diffusecolor": [0.2, 0.2, 1.0]
+            "diffusecolor": [0.2, 0.2, 1.0],
+            "tPath": "../textures/sicily.jpg",
+            "tWidth": 600,
+            "tHeight": 490
         }
     }
     ]

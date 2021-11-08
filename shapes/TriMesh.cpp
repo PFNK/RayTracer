@@ -17,6 +17,11 @@ namespace rt{
 
 
     Hit TriMesh::intersect(Ray* ray){
+        if(useBVH){
+            Hit h = bvh->intersect(ray);
+            h.dest = this;
+        } 
+        // printf("not using BVH intersect \n");
         float smallestT = INFINITY;
         Vec3f bestNormal = Vec3f(0,0,0);
         Vec3f bestPoint = Vec3f(0,0,0);

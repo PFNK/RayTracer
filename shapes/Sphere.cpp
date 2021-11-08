@@ -19,7 +19,6 @@ namespace rt{
 			float u = 0.5 + atan2(point[0], -point[1]) / (2 * M_PI);
 			float v = 0.5 - asin(point[2]) / M_PI;
 			uv = Vec2f(u,v);
-
 		}
 		return material->getColor(diffuse, specular, is, dist, uv);
 	}
@@ -36,26 +35,32 @@ namespace rt{
 	Hit Sphere::intersect(Ray* ray){
 		Hit h;
 		h.dest = this;
-		float t;
 		//-----------to be implemented -------------
-		Vec3f oc = ray->origin - center; //center - ray->origin;//
-		float a = ray->direction.dotProduct(ray->direction);
-		float b = 2.0 * oc.dotProduct(ray->direction);
-		float c = oc.dotProduct(oc) - radius*radius;
-		float discriminant = b*b - 4*a*c;
-		if(discriminant < 0){
+		Vec3f centerToOrigin = ray->origin - center;
+		// solve the quatratic equation at^2 + bt + x = 0
+		// where a = ray_dir dot ray_dir
+		// and b = 2 * spehre_center-to-origin dot ray_dir
+		// and c = spehre_center-to-origin dot spehre_center-to-origin - radius^2
+		float QE_a = ray->direction.dotProduct(ray->direction);
+		float QE_b = 2.0 * centerToOrigin.dotProduct(ray->direction);
+		float QE_c = centerToOrigin.dotProduct(centerToOrigin) - radius*radius;
+		// calculate the discriminant b^2 - 4*a*c
+		float QE_discr = (QE_b * QE_b) - (4 * QE_a * QE_c);
+		// if negative disriminant - no real roots, ray misses sphere
+		if(QE_discr < 0){
 			h.point = Vec3f(-1,-1,-1);
 			h.t = 0;
 			h.normal = Vec3f(0,0,0);
-		}
+		}	
+		// else need to check the roots and choose closer one
 		else{
-			float t_minus = (-b - sqrt(discriminant)) / (2.0*a);
-			float t_plus = (-b + sqrt(discriminant)) / (2.0*a);
+			// find t = -b +- sqrt(discriminant) / 2*a
+			float t_minus = (-QE_b - sqrt(QE_discr)) / (2.0 * QE_a);
+			float t_plus = (-QE_b + sqrt(QE_discr)) / (2.0 * QE_a);
 			h.t = std::min(t_minus, t_plus);
 			if(h.t < 0) h.t = std::max(t_minus, t_plus);
 			h.point = ray->origin + (h.t*ray->direction);
 			h.normal = (h.point - center).normalize();
-			// printf("sphere t_m t_p %f %f \n", t_minus, t_plus);
 		}
 
 		return h;

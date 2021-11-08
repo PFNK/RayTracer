@@ -22,8 +22,6 @@ public:
 	Plane();
 	Plane(Vec3f v0, Vec3f v1, Vec3f v2, Vec3f v3):v0(v0), v1(v1), v2(v2), v3(v3){};
 
-	// virtual ~Plane();
-
 	//
 	//Destructor
 	//

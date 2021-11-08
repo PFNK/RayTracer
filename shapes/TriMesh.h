@@ -10,6 +10,7 @@
 #include "core/Shape.h"
 #include "shapes/Triangle.h"
 #include "shapes/Bounds.h"
+#include "shapes/BVH.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -22,11 +23,8 @@ class TriMesh: public Shape{
 public:
 
     TriMesh();
-    TriMesh(Vec3f center, std::string path, float sizeScale):center(center){
+    TriMesh(Vec3f center, std::string path, float sizeScale, bool useBVH):center(center), useBVH(useBVH){
         // read the ply file and create triangles
-        Vec3f tmp;
-
-        int index = 0;
         std::string value;
         ifstream stream(path);
 
@@ -36,10 +34,10 @@ public:
             getline(stream, value);
         }
 
-        string s = value.c_str(); 
-        int m = s.find_last_of(' ');
-        s = s.substr(m,s.length()-1);
-        int nVertices = atoi(s.c_str());
+        string elementLine = value.c_str(); 
+        int numberIndexStart = elementLine.find_last_of(' ');
+        elementLine = elementLine.substr(numberIndexStart, elementLine.length()-1);
+        int nVertices = atoi(elementLine.c_str());
 
         getline(stream, value);
 
@@ -47,15 +45,15 @@ public:
             getline(stream, value);
         }
 
-        s = value.c_str(); 
-        m = s.find_last_of(' ');
-        s = s.substr(m,s.length()-1);
-        int nFaces = atoi(s.c_str());
+        elementLine = value.c_str(); 
+        numberIndexStart = elementLine.find_last_of(' ');
+        elementLine = elementLine.substr(numberIndexStart, elementLine.length()-1);
+        int nFaces = atoi(elementLine.c_str());
 
-        while((value.rfind("end_header", 0) != 0)){
+        while(value.rfind("end_header", 0) != 0){
             getline (stream, value);
         }
-        // printf("Number of vertices: %d, faces %d", nVertices, nFaces);
+
         int i=0;
         float x,y,z,e;
 
@@ -71,6 +69,7 @@ public:
         }
 
         i=0;
+
         while(i<nFaces){
             getline (stream, value);
             istringstream iss(value);
@@ -82,6 +81,14 @@ public:
             faces.push_back(t);
             i++;
         }
+
+        if(useBVH){
+            std::vector<Shape*> bvhShapes;
+            for(int i=0;i<faces.size();i++) bvhShapes.push_back(faces[i]);
+            bvh = new BVH(bvhShapes);
+            bvh->material = this->material;
+        } 
+
         stream.close(); 
     };
 
@@ -100,10 +107,11 @@ public:
     }
 
 private:
-
     Vec3f center;
     vector<Vec3f*> vertices;
     vector<Triangle*> faces;
+    BVH* bvh;
+    bool useBVH;
 
 };
 

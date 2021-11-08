@@ -26,11 +26,8 @@ Vec3f* RayTracer::render(Camera* camera, Scene* scene, int nbounces){
 	for (int j = 0; j < camera->getHeight(); ++j) { 
 		for (int i = 0; i < camera->getWidth(); ++i) { 
 			Ray* ray = camera->getPrimaryRay(i, j); // dir
-			// printf("%f %f %f \n", ray->direction[0], ray->direction[1], ray->direction[2]);
 			Vec3f color = scene->castRay(ray);
 			pixelbuffer[index] = color;
-			// printf("DONE: %f \n", (float)index/(camera->getWidth()*camera->getHeight()));
-            // *(pix++) = castRay(orig, dir, objects, lights, options, 0);
 			index++; 
 		} 
 	} 
@@ -50,27 +47,15 @@ Vec3f* RayTracer::tonemap(Vec3f* pixelbuffer, Camera* camera){
 	// //---------tonemapping function to be filled--------
 	printf("pixelbuffer size %i \n", camera->getWidth()*camera->getHeight());
 	float max=0;
+	// find maximum pixel value and normalize the RGB by it before multiplying by 256
 	for (int i = 0; i < camera->getWidth()*camera->getHeight(); ++i) {
-		// pixelbuffer[i] = pixelbuffer[i] * 255;
-		if(pixelbuffer[i][0] > max){
-			max = pixelbuffer[i][0];
-		}
-		if(pixelbuffer[i][1] > max){
-			max = pixelbuffer[i][1];
-		}
-		if(pixelbuffer[i][2] > max){
-			max = pixelbuffer[i][2];
-		}
+		if(pixelbuffer[i][0] > max) max = pixelbuffer[i][0];
+		if(pixelbuffer[i][1] > max) max = pixelbuffer[i][1];
+		if(pixelbuffer[i][2] > max) max = pixelbuffer[i][2];
 	}
 	for (int i = 0; i < camera->getWidth()*camera->getHeight(); ++i) {
-		
-		pixelbuffer[i] = (pixelbuffer[i]/=max) * 255;
+		pixelbuffer[i] = (pixelbuffer[i]/=max) * 256;
 	}
-
-
-
-
-
 
 	return pixelbuffer;
 

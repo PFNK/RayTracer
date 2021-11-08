@@ -15,19 +15,14 @@ namespace rt{
 enum RayType {PRIMARY, SECONDARY, SHADOW};
 
 struct Ray{
-
 	RayType raytype;
-
-	//----------Ray variables to be filled------
 	Vec3f origin;
 	Vec3f direction;
 };
 
-class Shape;
+class Shape; // so that Hit can contain Shape
 struct Hit{
-
 	Vec3f point; //point where ray hits a shape
-	//----------Hit variables to be filled------
 	float t;
 	Vec3f normal;
 	int bounces;

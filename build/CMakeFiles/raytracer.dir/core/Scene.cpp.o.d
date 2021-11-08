@@ -195,8 +195,6 @@ CMakeFiles/raytracer.dir/core/Scene.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/_types/_wctrans_t.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/LightSource.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Shape.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/math/geometry.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/cstdio \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/iostream \
@@ -261,4 +259,9 @@ CMakeFiles/raytracer.dir/core/Scene.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/cmath \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/math.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Shape.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Bounds.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Sphere.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/BVH.h

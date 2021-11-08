@@ -22,8 +22,9 @@ public:
         Bounds bounds;
         Node* left;
         Node* right;
-        Shape* shape;
+        std::vector<Shape*> shapesStored;
         bool isInner;
+        bool isEmpty;
     };
 
     BVH();
@@ -32,7 +33,7 @@ public:
 
     virtual ~BVH();
 
-    Node* buildTree(std::vector<Shape*> shapes);
+    Node* buildTree(std::vector<Shape*> shapes, int attempts);
 
     Hit intersect(Ray* ray);
 
@@ -46,6 +47,7 @@ public:
 
 private:
     Node* root;
+    int MAX_SPLIT_ATTEMPTS=2;
 };
 
 

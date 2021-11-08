@@ -22,15 +22,9 @@ namespace rt
 		// Constructors
 		//
 		BlinnPhong();
-		// BlinnPhong(Vec3f diffusecolor);
-		// ka * ia + for each light: kd(L_m * N)*id_m  + ks(R_m * V)^exponent * is_m
-		// ^ ambient + sum(m in light) diffuse_m + specular_m
-		// R is mirror reflection direction
 		BlinnPhong(float ks, float kd, float kr, float specularexponent, Vec3f diffusecolor, std::vector<Vec3f> texture, int tWidth, int tHeight) : ks(ks), kd(kd), kr(kr), specularexponent(specularexponent), diffusecolor(diffusecolor), texture(texture), tWidth(tWidth), tHeight(tHeight) 
 		{
 			// printf("creating blinnphong %f %f %f \n", diffusecolor[0], diffusecolor[1], diffusecolor[2]);
-
-			// this->diffusecolor = diffusecolor;
 		}
 
 		//
@@ -41,7 +35,7 @@ namespace rt
 		Vec3f getColor(Vec3f diffuse, float specular, Vec3f is, float dist, Vec2f uv){
 			Vec3f baseColor;
 			if(uv.x != -1 && hasTexture){
-				//GET TEXTUREs
+				//use texture instead if there is one to set the base color
 				int u = uv.x * tWidth;
 				int v = uv.y * tHeight;
 				baseColor = texture[u + (v*tWidth)];
@@ -50,9 +44,10 @@ namespace rt
 				baseColor = diffusecolor;
 			}
 
-			Vec3f dif = kd * diffuse * baseColor;
+			Vec3f dif = kd * diffuse ;
 			Vec3f spec = (ks * std::pow(specular,(specularexponent))) * is;
-			return ((dif/=dist) + (spec/=dist));
+			// can also divide by dist*dist as explained in report
+			return ((dif + spec) * baseColor) /= dist;
 		}
 		
 		Vec3f getAmbientColor(){

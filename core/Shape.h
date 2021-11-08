@@ -41,10 +41,6 @@ public:
 
 	static Shape* createBVH(std::vector<Shape*> shapes);
 
-	// Vec3f getMaterialColor(Vec3f diffuse, float specular, Vec3f is, float dist) const{
-	// 	return material->getColor(diffuse, specular, is, dist, );
-	// }
-
 	virtual Vec3f getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist)=0;
 
 	Vec3f getAmbientColor() const{
@@ -57,7 +53,7 @@ public:
 
 
 
-protected:
+public:
 
 	Material * material;
 

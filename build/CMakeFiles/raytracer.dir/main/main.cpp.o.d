@@ -264,9 +264,10 @@ CMakeFiles/raytracer.dir/main/main.cpp.o: \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/parsers/PPMWriter.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayTracer.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Camera.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Scene.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/vector \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/LightSource.h \
   /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Shape.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/RayHitStructs.h \
-  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/core/Material.h \
+  /Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Bounds.h

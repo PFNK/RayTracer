@@ -15,20 +15,19 @@ namespace rt{
     Vec3f Triangle::getMaterialColor(Vec3f hitPoint, Vec3f diffuse, float specular, Vec3f is, float dist){
         Vec2f uv(-1,-1);;
         if(material->hasTexture){
-            // uv(-1,-1);
-            // DO TEXTURE MAPPING STUFF
             // get u,v coordinate Vec2f
             Vec3f bottomEdge = *v1-*v0;
             Vec3f N = bottomEdge.crossProduct(*v2-*v0);
             float area = N.length() / 2;
             float height = 2 * area / bottomEdge.length();
-
             float width = (*v1-*v2).dotProduct(bottomEdge) / bottomEdge.length();
+
             if(width<bottomEdge.length()) width = bottomEdge.length();
 
             Vec3f widthVec = bottomEdge.normalize() * width;
             float heightVec = pow((hitPoint - *v0).length(), 2) - pow(((hitPoint-*v0).dotProduct(bottomEdge) / bottomEdge.length()), 2);
             heightVec = sqrt(heightVec);
+            
             float v = heightVec / height;
             float u = (hitPoint - *v0).dotProduct(widthVec) / widthVec.length();
             u = u /width;
@@ -42,15 +41,15 @@ namespace rt{
         h.dest = this;
         Vec3f normal = ((*v1 - *v0).crossProduct(*v2 - *v0)).normalize();
 
-        float denom = normal.dotProduct(ray->direction);
-        if (abs(denom)<0.0001f){
+        float tDenominator = normal.dotProduct(ray->direction);
+        if (abs(tDenominator)<1e-4){
             h.normal = Vec3f(0,0,0);
             h.t = 0;
             h.point = Vec3f(-1,-1,-1);
             return h;
         }
 
-        float t = (*v0 - (ray->origin)).dotProduct(normal) / denom;
+        float t = (*v0 - (ray->origin)).dotProduct(normal) / tDenominator;
         h.point = ray->origin + t * ray->direction; 
         h.t = t;
         h.normal = normal;

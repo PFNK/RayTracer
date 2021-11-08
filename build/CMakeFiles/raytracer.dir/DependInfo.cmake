@@ -21,6 +21,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/main/main.cpp" "CMakeFiles/raytracer.dir/main/main.cpp.o" "gcc" "CMakeFiles/raytracer.dir/main/main.cpp.o.d"
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/materials/BlinnPhong.cpp" "CMakeFiles/raytracer.dir/materials/BlinnPhong.cpp.o" "gcc" "CMakeFiles/raytracer.dir/materials/BlinnPhong.cpp.o.d"
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/BVH.cpp" "CMakeFiles/raytracer.dir/shapes/BVH.cpp.o" "gcc" "CMakeFiles/raytracer.dir/shapes/BVH.cpp.o.d"
+  "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Plane.cpp" "CMakeFiles/raytracer.dir/shapes/Plane.cpp.o" "gcc" "CMakeFiles/raytracer.dir/shapes/Plane.cpp.o.d"
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Sphere.cpp" "CMakeFiles/raytracer.dir/shapes/Sphere.cpp.o" "gcc" "CMakeFiles/raytracer.dir/shapes/Sphere.cpp.o.d"
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/TriMesh.cpp" "CMakeFiles/raytracer.dir/shapes/TriMesh.cpp.o" "gcc" "CMakeFiles/raytracer.dir/shapes/TriMesh.cpp.o.d"
   "/Users/mariasliacka/computer_graphics/cw2/raytracer_A2_CG2021/RayTracer/shapes/Triangle.cpp" "CMakeFiles/raytracer.dir/shapes/Triangle.cpp.o" "gcc" "CMakeFiles/raytracer.dir/shapes/Triangle.cpp.o.d"
