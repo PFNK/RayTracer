@@ -88,10 +88,10 @@
     {
         "id": "mesh",
         "type": "trimesh",
-        "useBVH":true,
+        "useBVH": true,
         "sizeScale": 0.2,
         "center": [0.0, 2.7, 1.15],
-        "plyPath": "../meshes/teapot.ply",
+        "plyPath": "../meshes/beethoven.ply",
         "material": {
             "ks": 0.6,
             "kd": 0.7,

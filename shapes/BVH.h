@@ -47,7 +47,7 @@ public:
 
 private:
     Node* root;
-    int MAX_SPLIT_ATTEMPTS=2;
+    int MAX_SPLIT_ATTEMPTS=1;
 };
 
 

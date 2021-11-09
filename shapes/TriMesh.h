@@ -57,18 +57,29 @@ public:
         int i=0;
         float x,y,z,e;
 
+        // apple and beethoven need to be rotated
+        Matrix44f rotation = Matrix44f(
+			1 , 0, 0, 0,
+			0 , 0, 1, 0,
+			0, -1, 0, 0,
+			0.0, 0.0, 0.0, 1.0);
+
         while(i<nVertices){
             getline (stream, value);
             istringstream iss(value);
             iss >> x;
             iss >> y;
             iss >> z;
-            Vec3f* vertex = new Vec3f((x*sizeScale)+center[0], (y*sizeScale)+center[1], (z*sizeScale)+center[2]);
-            vertices.push_back(vertex);
+            // Vec3f point((x*sizeScale)+center[0], (y*sizeScale)+center[1], (z*sizeScale)+center[2]);
+            Vec3f vertex = Vec3f((x*sizeScale), (y*sizeScale), (z*sizeScale));
+            rotation.multVecMatrix(vertex, vertex);
+            Vec3f* rotatedVertex = new Vec3f(vertex.x+center[0], vertex.y+center[1], vertex.z+center[2]);
+            vertices.push_back(rotatedVertex);
             i++;
         }
 
         i=0;
+        std::vector<Shape*> bvhShapes;
 
         while(i<nFaces){
             getline (stream, value);
@@ -77,17 +88,22 @@ public:
             iss >> x;
             iss >> y;
             iss >> z;
-            Triangle* t = new Triangle(vertices[x], vertices[y], vertices[z]);
-            faces.push_back(t);
+            Shape* t = new Triangle(vertices[x], vertices[y], vertices[z]);
+            bvhShapes.push_back(t);
             i++;
         }
-
         if(useBVH){
-            std::vector<Shape*> bvhShapes;
-            for(int i=0;i<faces.size();i++) bvhShapes.push_back(faces[i]);
             bvh = new BVH(bvhShapes);
             bvh->material = this->material;
-        } 
+        }
+        else{
+            faces = bvhShapes;
+        }
+        //     std::vector<Shape*> bvhShapes;
+        //     for(int i=0;i<faces.size();i++) bvhShapes.push_back(faces[i]);
+        //     bvh = new BVH(bvhShapes);
+        //     bvh->material = this->material;
+        // } 
 
         stream.close(); 
     };
@@ -109,7 +125,7 @@ public:
 private:
     Vec3f center;
     vector<Vec3f*> vertices;
-    vector<Triangle*> faces;
+    vector<Shape*> faces; // Shape but is triangle always
     BVH* bvh;
     bool useBVH;
 

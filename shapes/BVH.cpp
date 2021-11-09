@@ -161,7 +161,6 @@ namespace rt{
         }
 
         else{
-            attempts++;
             Node* innerNode = new Node();
             std::vector<Shape*> leftChildren;
             std::vector<Shape*> rightChildren;
@@ -177,19 +176,24 @@ namespace rt{
 
             innerNode->bounds = totalBound;
             int splitAxIndex = totalBound.getBoundsSplitIndex();
-            Vec3f midPoint = ((totalBound.max - totalBound.min) * 0.5);
+            Vec3f midPoint = totalBound.min + ((totalBound.max - totalBound.min) * 0.5).length();
             
             for(int i=0;i<shapes.size();i++){
                 Bounds shapeBound = shapes[i]->getBounds();
-                Vec3f shapeCentroid = ((shapeBound.max - shapeBound.min) * 0.5);
+                Vec3f shapeCentroid = shapeBound.min + ((shapeBound.max - shapeBound.min) * 0.5).length();
                 if(shapeCentroid[splitAxIndex] < midPoint[splitAxIndex]) leftChildren.push_back(shapes[i]);
                 else rightChildren.push_back(shapes[i]);
             }
             // printf("left children size %d \n", leftChildren.size());
             // printf("right children size %d \n", rightChildren.size());
-
-            innerNode->left = buildTree(leftChildren, attempts);
-            innerNode->right = buildTree(rightChildren, attempts);
+            if(leftChildren.size() == 0 || rightChildren.size() == 0){
+                innerNode->left = buildTree(leftChildren, attempts+1);
+                innerNode->left = buildTree(leftChildren, attempts+1);
+            } 
+            else{
+                innerNode->left = buildTree(leftChildren, 0);
+                innerNode->right = buildTree(rightChildren, 0);
+            }
 
             return innerNode;
 

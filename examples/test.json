@@ -27,8 +27,9 @@
             "center": [0.0, 2.7, 1.15],
             "radius":0.6,
             "material":{
-                "ks":0.6,
-                "kd":0.7,
+                "ks":0.4,
+                "kd":0.8,
+                "kr":0.6,
                 "specularexponent":30,
                 "diffusecolor":[0.4, 0.3, 0.4],
                 "tPath": "../textures/map.ppm",

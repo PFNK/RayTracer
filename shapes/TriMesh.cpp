@@ -20,8 +20,9 @@ namespace rt{
         if(useBVH){
             Hit h = bvh->intersect(ray);
             h.dest = this;
-        } 
-        // printf("not using BVH intersect \n");
+            return h;
+        }
+        // when not using BVH need to fill up the faces parameter
         float smallestT = INFINITY;
         Vec3f bestNormal = Vec3f(0,0,0);
         Vec3f bestPoint = Vec3f(0,0,0);
@@ -31,12 +32,12 @@ namespace rt{
             Hit tmp = faces[i]->intersect(ray);
             
             if(tmp.t > 0){
-            if(tmp.t<smallestT){
-                hitBool = true;
-                smallestT = tmp.t;
-                bestNormal = tmp.normal;
-                bestPoint = tmp.point;
-            }
+                if(tmp.t<smallestT){
+                    hitBool = true;
+                    smallestT = tmp.t;
+                    bestNormal = tmp.normal;
+                    bestPoint = tmp.point;
+                }
             } 
         }
 
