@@ -1,3 +1,6 @@
+My implementation of ray tracer, coursework on computer graphics course.
+
+
 #
 # Computer Graphics, Autumn 2021
 #
